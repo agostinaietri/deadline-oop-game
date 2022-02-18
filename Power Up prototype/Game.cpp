@@ -41,6 +41,21 @@ void Game::ProcesadoJuego ( ) {
 		if(e.type == Event::Closed)
 			m_w.close();	
 		}
+	
+
+/*Cuando se ingrese el nickname del Playerpara guardar su Puntaje, la clase game se la tiene que pasar a gameover para que esta 
+	almacene el nombre junto con el puntaje que recibió de la clase Match.
+		Preguntar como enlazar est co GameOver. Esta duda duda esta en la linea 55.*/
+		if(e.type == Event::TextEntered){
+			if (e.text.unicode < 128 && e.text.unicode != 13){
+				std::string new_name;
+				new_name.push_back(static_cast<char>(e.text.unicode));
+			}
+			if (e.text.unicode == 13){
+				pasar_a_gameover(new_name);
+			}
+		}
+
 	}
 }
 
