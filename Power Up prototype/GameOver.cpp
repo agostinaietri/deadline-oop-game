@@ -27,7 +27,7 @@ GameOver::GameOver(int new_score) {
 
 	// Los datos del último Player.
 	string new_name; 
-	cin>> new_name;	/// ! ver otro modo de ingresar nombre x teclado
+	cin>> new_name;	/// despues de ver lo de Game, lo borro.
 	// se va a usar en otra funcion, junto con puntaje_g.
 	
 	/// Seteo el texto para pedir el nombre
@@ -43,7 +43,7 @@ GameOver::GameOver(int new_score) {
 	
 	this->SetearPuntajes();
 	
-	this->Ingresar(new_name,new_score);
+	this->Ingresar(new_name,new_score); //uso el nombre ingresado x teclado y el puntaje de la ultima partida.
 	
 	this->Actualizar();
 }
@@ -54,7 +54,7 @@ void GameOver::Draw (RenderWindow &Window2) {
 	Window2.draw(m_tex_pidedatos); //el txt "ingrese su nombre"
 	
 	// para mostrar el ranking, de la forma: "nombre    puntos".
-	for(int i=0;i<ranking_p.size();i++) { 
+	for(int i=0;i<textos_players.size();i++) { 
 		Window2.draw(textos_players[i]);
 	}
 	
