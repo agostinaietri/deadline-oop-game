@@ -18,6 +18,7 @@ public:
 	Match();
 	void Draw(RenderWindow &window);
 	void Update(Game &gamee);
+	void ProcessEvent(Event &e);
 	~Match();
 private:
 	Music stage_music;

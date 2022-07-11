@@ -38,48 +38,13 @@ Match::Match() {
 	int max_y = 341;
 	
 	enemy_texture.loadFromFile("calc.png");
-	
-	/// vector para crear enemigos con un limite definido
-//	for(int i = 0; i<cantenemi; i++) {
-//	enemies.push_back( Enemy(enemy_texture) );
-//	int result = rand() % 2;
-//	if(result == 1) {
-//		enemies[i].CambiarPosicion(341,i);
-//	} else {
-//		enemies[i].CambiarPosicion(230,i);
-//	}
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// mientras para hacer enemigos mientras el player esta vivo 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	enemies.push_back(Enemy(enemy_texture));
-//	int i=0;
-//	while(i<cantenemi){
-//		int result = rand() % 2; 
-//		if(result == 1){
-//			enemies[i].CambiarPosicion(341,i);
-//		}else{
-//			enemies[i].CambiarPosicion(230,i);
-//		}
-//		i++;
-//		enemies.push_back(Enemy(enemy_texture,speed));
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	score = 1;
-//	
-//	stringstream ss;
-//	ss << score;
-//	
-//	score_text.setString( ss.str().c_str() );
 
-	if (!scoreFont.loadFromFile("FreePixel.ttf"))
+/*	if (!scoreFont.loadFromFile("FreePixel.ttf"))
 	{
 		// cout << "cannot load file" << endl;
 	}
 	
-	string scoreToStr = to_string(puntaje);
+	string scoreToStr = to_string(puntaje);*/
 	
 	scoreText.setFont(scoreFont);
 	scoreText.setString("score:");
@@ -133,18 +98,6 @@ void Match::Update ( Game &gamee ) {
 		e.Update();
 	}
 	
-//	Time time = clock.getElapsedTime();
-//	float secsPassed  = time.asSeconds();
-//	if(secsPassed == X) {//		enemies.push_back( Enemy(enemy_texture) );
-//		int result = rand() % 2;
-//		if(result == 1) {
-//			enemies[i].CambiarPosicion(341);
-//		} else {
-//			enemies[i].CambiarPosicion(230);
-//		}
-//	}
-	
-	
 	Time time = tiempoenemigos.getElapsedTime();
 	float secsPassed  = time.asSeconds();
 	
@@ -180,7 +133,11 @@ void Match::Update ( Game &gamee ) {
 	
 //	4 = puntaje + cant*100;
 	
-	
+	//se suman puntos cuando los enemigos vayan siendo eliminados de pantalla
+		puntaje += 1;
+		string scoreToStr = to_string(puntaje);
+		scorePrint.setString(scoreToStr);
+
 	for(int i=0;i<enemies.size();i++){
 		auto bb1 = enemies[i].GetBB(); 
 		auto bb2 = player.GetBB();
@@ -189,17 +146,12 @@ void Match::Update ( Game &gamee ) {
 		
 		if(bb1.intersects(bb2)){
 			gamee.SetScene(new GameOver());
-			// clock.restart();
 		}
 	}
-	
-	
 }
-
-
-
+//
+void Match::ProcessEvent(Event &e){ }
 
 Match::~Match ( ) {
 	stage_music.stop();
 }
-
