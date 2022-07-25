@@ -37,9 +37,14 @@ void Game::Update () {
 
 void Game::ProcesadoJuego ( ) {
 	Event e;
-	while(m_w.pollEvent(e)){ {
-		if(e.type == Event::Closed)
+	while(m_w.pollEvent(e)){
+		if(e.type == Event::Closed){
 			m_w.close();	
+		} else if (e.type==sf::Event::KeyPressed && e.key.code==sf::Keyboard::Return) { // si apretó enter, se toma la palabra y se la agrega a la lista{
+			m_scene->ProcessEvent(e); // metodo que reciba un evento en m_scene.
+		/*en esta linea, el evento que se quiere procesar es cuando el jugador pierde la partida y tiene que tipear su nombre.
+			como la clase GameOver es hija de Scene, que es la que tiene ProcessEvent virtual, va a procesar ese evento asi
+			guarda dicho nombre como una variable y despues usarla para lo q necesita.*/
 		}
 	}
 }
@@ -47,4 +52,3 @@ void Game::ProcesadoJuego ( ) {
 void Game::SetScene (Scene * next_scene) {
 	m_next_scene = next_scene;
 }
-

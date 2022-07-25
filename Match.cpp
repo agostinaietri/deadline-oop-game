@@ -39,47 +39,6 @@ Match::Match() {
 	
 	enemy_texture.loadFromFile("calc.png");
 	
-	/// vector para crear enemigos con un limite definido
-//	for(int i = 0; i<cantenemi; i++) {
-//	enemies.push_back( Enemy(enemy_texture) );
-//	int result = rand() % 2;
-//	if(result == 1) {
-//		enemies[i].CambiarPosicion(341,i);
-//	} else {
-//		enemies[i].CambiarPosicion(230,i);
-//	}
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// mientras para hacer enemigos mientras el player esta vivo 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	enemies.push_back(Enemy(enemy_texture));
-//	int i=0;
-//	while(i<cantenemi){
-//		int result = rand() % 2; 
-//		if(result == 1){
-//			enemies[i].CambiarPosicion(341,i);
-//		}else{
-//			enemies[i].CambiarPosicion(230,i);
-//		}
-//		i++;
-//		enemies.push_back(Enemy(enemy_texture,speed));
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	score = 1;
-//	
-//	stringstream ss;
-//	ss << score;
-//	
-//	score_text.setString( ss.str().c_str() );
-
-	if (!scoreFont.loadFromFile("FreePixel.ttf"))
-	{
-		// cout << "cannot load file" << endl;
-	}
-	
-	string scoreToStr = to_string(puntaje);
 	
 	scoreText.setFont(scoreFont);
 	scoreText.setString("score:");
@@ -88,6 +47,8 @@ Match::Match() {
 	scoreText.setPosition(200,20);
 	scoreText.setColor(sf::Color::Red);
 	
+	
+	string scoreToStr = to_string(puntaje);
 	scorePrint.setFont(scoreFont);
 	scorePrint.setString(scoreToStr);
 	scorePrint.setCharacterSize(40);
@@ -105,6 +66,8 @@ void Match::Draw (RenderWindow & window) {
 	window.draw(Shadow);
 	player.Draw(window); 
 /*	shadow.Draw(window); */
+	string scoreToStr = to_string(puntaje);
+	scorePrint.setString(scoreToStr);
 	window.draw(scoreText);
 	window.draw(scorePrint);
 	
@@ -132,18 +95,6 @@ void Match::Update ( Game &gamee ) {
 	for(Enemy &e : enemies) {
 		e.Update();
 	}
-	
-//	Time time = clock.getElapsedTime();
-//	float secsPassed  = time.asSeconds();
-//	if(secsPassed == X) {//		enemies.push_back( Enemy(enemy_texture) );
-//		int result = rand() % 2;
-//		if(result == 1) {
-//			enemies[i].CambiarPosicion(341);
-//		} else {
-//			enemies[i].CambiarPosicion(230);
-//		}
-//	}
-	
 	
 	Time time = tiempoenemigos.getElapsedTime();
 	float secsPassed  = time.asSeconds();
@@ -173,13 +124,16 @@ void Match::Update ( Game &gamee ) {
 		
 	}
 	
-
+	
 	auto it = remove_if(enemies.begin(),enemies.end(),estaafuera);
 	int cant = enemies.end()-it;
 	enemies.erase(it,enemies.end());
 	
-//	4 = puntaje + cant*100;
 	
+	//se suman puntos cuando los enemigos vayan siendo eliminados de la pantalla
+		puntaje += 1;
+		string scoreToStr = to_string(puntaje);
+		scorePrint.setString(scoreToStr);
 	
 	for(int i=0;i<enemies.size();i++){
 		auto bb1 = enemies[i].GetBB(); 
@@ -188,16 +142,15 @@ void Match::Update ( Game &gamee ) {
 		bb2.width-=50;
 		
 		if(bb1.intersects(bb2)){
-			gamee.SetScene(new GameOver());
-			// clock.restart();
+			
+			gamee.SetScene(new GameOver(puntaje));
 		}
 	}
 	
-	
 }
-
-
-
+void Maatch::ProcessEvent(Event &e){
+	// no hace nada
+}
 
 Match::~Match ( ) {
 	stage_music.stop();

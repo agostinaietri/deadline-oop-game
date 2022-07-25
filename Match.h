@@ -18,6 +18,7 @@ public:
 	Match();
 	void Draw(RenderWindow &window);
 	void Update(Game &gamee);
+	void ProcessEvent(Event &e);
 	~Match();
 private:
 	Music stage_music;
@@ -33,7 +34,7 @@ private:
 	Sprite Shadow;
 	vector <Enemy> enemies;
 	Texture enemy_texture;
-	Font scoreFont;
+	Font scoreFont;	//las partes del score
 	Text scorePrint;
 	Text scoreText;
 	Sprite coffeeMug;

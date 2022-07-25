@@ -48,5 +48,7 @@ void Menu::Update (Game &gamee ) {
 	}
 	
 }
-
+void Menu::ProcessEvent(Event &e){
+	
+}
 

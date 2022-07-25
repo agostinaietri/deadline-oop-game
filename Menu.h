@@ -13,6 +13,7 @@ public:
 	Menu();
 	void Update(Game &gamee);
 	void Draw(RenderWindow &Window2);
+	void ProcessEvent(Event &e);
 private:
 	Music menu_music;
 	Font m_font;

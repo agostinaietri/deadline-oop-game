@@ -8,10 +8,7 @@ Enemy::Enemy(sf::Texture &t,float speed) : ObjetoSinTex(t) {
 
 void Enemy::Update ( ) {
 	m_s.move(m_speed,0);
-	
 }
-
-
 void Enemy::CambiarPosicion (int pos_y, int i) {
 	posy = pos_y;
 	m_s.setPosition(posx+450*i,posy);
