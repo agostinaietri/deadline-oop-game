@@ -39,60 +39,21 @@ Match::Match() {
 	
 	enemy_texture.loadFromFile("calc.png");
 	
-	/// vector para crear enemigos con un limite definido
-//	for(int i = 0; i<cantenemi; i++) {
-//	enemies.push_back( Enemy(enemy_texture) );
-//	int result = rand() % 2;
-//	if(result == 1) {
-//		enemies[i].CambiarPosicion(341,i);
-//	} else {
-//		enemies[i].CambiarPosicion(230,i);
-//	}
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// mientras para hacer enemigos mientras el player esta vivo 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	enemies.push_back(Enemy(enemy_texture));
-//	int i=0;
-//	while(i<cantenemi){
-//		int result = rand() % 2; 
-//		if(result == 1){
-//			enemies[i].CambiarPosicion(341,i);
-//		}else{
-//			enemies[i].CambiarPosicion(230,i);
-//		}
-//		i++;
-//		enemies.push_back(Enemy(enemy_texture,speed));
-//	}
-	
-	/// /// /// /// /// /// /// /// /// /// 	/// /// /// /// /// /// /// /// /// /// 
-	
-//	score = 1;
-//	
-//	stringstream ss;
-//	ss << score;
-//	
-//	score_text.setString( ss.str().c_str() );
-
-	if (!scoreFont.loadFromFile("FreePixel.ttf"))
-	{
-		// cout << "cannot load file" << endl;
-	}
-	
-	string scoreToStr = to_string(puntaje);
+	scoreFont.loadFromFile("FreePixel.ttf");
 	
 	scoreText.setFont(scoreFont);
-	scoreText.setString("score:");
+	scoreText.setString("score: ");
 	scoreText.setCharacterSize(40);
 	scoreText.setStyle(sf::Text::Bold);
-	scoreText.setPosition(200,20);
+	scoreText.setPosition(150,8.7);
 	scoreText.setColor(sf::Color::Red);
 	
+	scoreToStr = to_string(puntaje);
 	scorePrint.setFont(scoreFont);
 	scorePrint.setString(scoreToStr);
 	scorePrint.setCharacterSize(40);
 	scorePrint.setStyle(sf::Text::Bold);
-	scorePrint.setPosition(350,22);
+	scorePrint.setPosition(300,8.7);
 	scorePrint.setColor(sf::Color::Red);
 }
 
@@ -105,6 +66,8 @@ void Match::Draw (RenderWindow & window) {
 	window.draw(Shadow);
 	player.Draw(window); 
 /*	shadow.Draw(window); */
+	
+	scorePrint.setString(scoreToStr);
 	window.draw(scoreText);
 	window.draw(scorePrint);
 	
@@ -132,18 +95,6 @@ void Match::Update ( Game &gamee ) {
 	for(Enemy &e : enemies) {
 		e.Update();
 	}
-	
-//	Time time = clock.getElapsedTime();
-//	float secsPassed  = time.asSeconds();
-//	if(secsPassed == X) {//		enemies.push_back( Enemy(enemy_texture) );
-//		int result = rand() % 2;
-//		if(result == 1) {
-//			enemies[i].CambiarPosicion(341);
-//		} else {
-//			enemies[i].CambiarPosicion(230);
-//		}
-//	}
-	
 	
 	Time time = tiempoenemigos.getElapsedTime();
 	float secsPassed  = time.asSeconds();
@@ -173,33 +124,34 @@ void Match::Update ( Game &gamee ) {
 		
 	}
 	
-
+	
 	auto it = remove_if(enemies.begin(),enemies.end(),estaafuera);
 	int cant = enemies.end()-it;
 	enemies.erase(it,enemies.end());
 	
-//	4 = puntaje + cant*100;
 	
+	//se suman puntos cuando los enemigos vayan siendo eliminados de la pantalla
+		puntaje += 1;
+		scoreToStr = to_string(puntaje);
 	
-	for(int i=0;i<enemies.size();i++){
+	for(int i=0;i<enemies.size();i++){ // colisión jugador-obstáculo
 		auto bb1 = enemies[i].GetBB(); 
 		auto bb2 = player.GetBB();
-		bb2.left+=40; 
-		bb2.width-=50;
+		
+	/// modificaciones del RectangleShape de obstaculo para darle mas precisión a la colisión 
+		bb1.height-=10; // se "achica" la altura 
+		
+		bb2.left+=20;  //se "alarga" la coordenada del lado izquierdo
+		bb2.height-=20;// se achica la altura
+		bb2.width-=50; // se achica el ancho 
 		
 		if(bb1.intersects(bb2)){
-			gamee.SetScene(new GameOver());
-			// clock.restart();
+			gamee.SetScene(new GameOver(puntaje));
 		}
 	}
 	
-	
 }
-
-
-
 
 Match::~Match ( ) {
 	stage_music.stop();
 }
-
