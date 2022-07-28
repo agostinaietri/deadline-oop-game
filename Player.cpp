@@ -16,7 +16,6 @@ void Player::Update ( ) {
 	m_num_frame = (m_num_frame+1)%40;
 	
 	
-	
 	m_speed.y += 0.15;
 	m_pos += m_speed;
 	
