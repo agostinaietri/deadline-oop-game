@@ -11,6 +11,7 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <vector>
+#include <SFML/Graphics/Font.hpp>
 using namespace std;
 
 class Match : public Scene{
@@ -18,6 +19,7 @@ public:
 	Match();
 	void Draw(RenderWindow &window);
 	void Update(Game &gamee);
+	void ProcessEvent(Event &e){}
 	~Match();
 private:
 	Music stage_music;
@@ -33,6 +35,8 @@ private:
 	Sprite Shadow;
 	vector <Enemy> enemies;
 	Texture enemy_texture;
+	
+	//las partes del score
 	Font scoreFont;
 	Text scorePrint;
 	Text scoreText;
@@ -43,7 +47,7 @@ private:
 	float distan=1.5;
 	Clock tiempoenemigos;
 	int puntaje=0;
-	
+	string scoreToStr;
 };
 
 #endif

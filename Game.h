@@ -1,13 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "Game.h"
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Scene.h"
-
-
 
 using namespace sf;
 class Scene;

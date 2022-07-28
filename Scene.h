@@ -11,6 +11,7 @@ public:
 	Scene();
 	virtual void Draw(RenderWindow &Window) = 0;
 	virtual void Update(Game &gamee) = 0;
+	virtual void ProcessEvent(Event &e) = 0;
 	virtual ~Scene () {};
 private:
 };
