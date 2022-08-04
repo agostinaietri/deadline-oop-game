@@ -36,7 +36,7 @@ cursor=11:0
 open=true
 [source]
 path=Match.cpp
-cursor=186:2
+cursor=166:47
 breakpoint=89
 breakpoint_annotation=
 open=true
@@ -62,7 +62,7 @@ cursor=1:0
 open=true
 [source]
 path=Powerup.cpp
-cursor=3:4
+cursor=7:17
 open=true
 [source]
 path=ManejoArchivo.cpp
@@ -107,7 +107,7 @@ cursor=4:0
 open=true
 [header]
 path=Enemy.h
-cursor=13:32
+cursor=16:11
 open=true
 [header]
 path=GameOver.h

@@ -115,6 +115,14 @@ void asignarPos(Enemy &e){
 		e.CambiarPosicion(230,0);
 	}
 }
+void asignarPos(Powerup &p_up){		
+	int result2 = rand() % 2;  // determina la pos
+	if(result2 == 1){
+		p_up.CambiarPosicion(300,0);
+	}else{
+		p_up.CambiarPosicion(260,0);
+	}
+}
 void Match::Update ( Game &gamee ) {
 	if(Keyboard::isKeyPressed(Keyboard::Key::Escape)){ // para volver a Menu
 		gamee.SetScene(new Menu());
@@ -126,26 +134,56 @@ void Match::Update ( Game &gamee ) {
 	m_powerup.Update();
 	for(Enemy &e : enemigos) {
 		e.Update();
-		if( player.colisionaCon(e) ){
+		if( player.colisionaCon(e) ){ // colision player-obstaculos
 			gamee.SetScene(new GameOver(puntaje));
 		}else{
 			cant_enemigos_pasados += 1;
 		}
 	}
 	
+	/// POWERUP
+	if( player.colisionaCon(m_powerup) ){
+		
+		int contador = 5;
+		while( contador!=0 ){ // la velocidad se hace mas lenta por cinco segundos
+			
+			for(int i=0;i<enemigos.size();i++){ // colisión player-enemigo
+				enemigos[i].bajarVelocidad(0.5);
+			}
+			contador--;
+		}
+		cant_enemigos_pasados = 0;
+	}
+	
+	if( m_powerup.posicion().x==-10 ){ // si esta afuera de la pantalla (no lo agarró)..
+		// borrarlo de la pantalla
+		m_powerup.CambiarPosicion(725,0);// que vuelva a estar quieto en la parte de atras dea
+		cant_enemigos_pasados = 0;
+		
+	}
+	
+	/// generación de objetos en movimiento
 	Time time_enemigos = tiempoenemigos.getElapsedTime(); // de clock  a time
 	float secsPassed  = time_enemigos.asSeconds();
 	
-	if(secsPassed >= distan) { // condicional para q los obstaculos se generen a cierta distancia
+	if(secsPassed >= distan) { // condicional para q los objetos se generen a cierta distancia
 		
-		// para variar la textura de enemigo
-		string file_elegido = elegirText();
-		enemy_texture = new sf::Texture;
-		enemy_texture->loadFromFile(file_elegido);
-		Enemy aux_e(enemy_texture,speed);
-		
-		asignarPos(aux_e);
-		enemigos.push_back(aux_e);
+		if( cant_enemigos_pasados==10 ){//y si ademas ya esquivó 10 obstaculos..
+			powerup_texture = new sf::Texture;// genera powerup
+			powerup_texture->loadFromFile("clip.png");
+			asignarPos(m_powerup);
+			m_powerup.Asignar(powerup_texture,speed);
+			
+		}else { //en caso q player no esquivó 10 obstaculos, siguen apareciendo
+			
+			string file_elegido = elegirText(); // para variar la textura de enemigo
+			enemy_texture = new sf::Texture;
+			enemy_texture->loadFromFile(file_elegido);
+			Enemy aux_e(enemy_texture,speed);
+			
+			asignarPos(aux_e);
+			enemigos.push_back(aux_e);
+		}
 		
 		speed = speed-0.2; // la velocidad aumenta gradualmente.
 		
@@ -161,48 +199,12 @@ void Match::Update ( Game &gamee ) {
 		}
 		tiempoenemigos.restart();
 	}
-		
-	auto it = remove_if(enemigos.begin(),enemigos.end(),estaafuera);
+	
+	auto it = remove_if(enemigos.begin(),enemigos.end(),estaafuera); //si ya no figuran dentro d la pantalla, se borran del vector.
 	int cant = enemigos.end() - it;
 	enemigos.erase(it,enemigos.end());
 	
-	puntaje += 1;
-	scoreToStr = to_string(puntaje);
-	
-	if( cant_enemigos_pasados==10 )
-	{	
-		// genero powerup
-		powerup_texture = new sf::Texture;
-		powerup_texture->loadFromFile("clip.png");
-		m_powerup.Asignar(powerup_texture,speed);
-		
-		int result2 = rand() % 2;  // determina la pos
-		if(result2 == 1){
-			m_powerup.CambiarPosicion(300,0);
-		}else{
-			m_powerup.CambiarPosicion(260,0);
-		}
-		
-		
-		
-		/// POWERUP
-		if( player.colisionaCon(m_powerup) ){
-			
-			int contador = 5;
-			while( contador!=0 ){ // la velocidad se hace mas lenta por cinco segundos
-				
-				for(int i=0;i<enemigos.size();i++){ // colisión player-enemigo
-					enemigos[i].bajarVelocidad(0.5);
-				}
-				contador--;
-			}
-		}
-		if( m_powerup.posicion().x==-10 ){ // si esta afuera de la pantalla (no lo agarró)..
-			// borrarlo de la pantalla
-			m_powerup.CambiarPosicion(725,0);// que vuelva a estar quieto en la parte de atras dea
-		}
-		cant_enemigos_pasados = 0;
-	}
-	
+	puntaje += 1; // se actualiza el puntaje
+	scoreToStr = to_string(puntaje);	
 
 }
