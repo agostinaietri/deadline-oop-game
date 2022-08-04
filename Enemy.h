@@ -14,6 +14,7 @@ public:
 	void bajarVelocidad(float nro);
 	Vector2f posicion();
 	void CambiarPosicion (int pos_y,int i);
+	~Enemy(){}
 };
 
 #endif
