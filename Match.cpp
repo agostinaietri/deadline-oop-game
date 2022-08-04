@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <SFML/Graphics/Text.hpp>
+#include "Powerup.h"
 using namespace std;
 
 Match::Match() {
@@ -19,28 +20,31 @@ Match::Match() {
 	Zeds_face.setTexture(face_texture);
 	Zeds_face.setPosition(250,20);
 	Zeds_face.setScale(0.666,0.666);
-	coffee_texture.loadFromFile("coffee-pickup.png");
-	Pickup.setTexture(coffee_texture);
-	Pickup.setPosition(500,20);
-	Pickup.setScale(0.666,0.666);
+	
+//	coffee_texture.loadFromFile("coffee-pickup.png");
+	///en vez d pickup pongo vida1
+//	Pickup.setTexture(coffee_texture);
+//	vida1.setTexture(coffee_texture);
+//	Pickup.setPosition(500,20);
+//	vida1.setPosition(500,20);
+//	Pickup.setScale(0.666,0.666);
+//	vida1.setScale(0.666,0.666);
+	
 	shadow_texture.loadFromFile("zeds-shadow.png");
 	Shadow.setTexture(shadow_texture);
 	Shadow.setPosition(-200,48);
 	Shadow.setScale(2.0,2.0);
 	
-	coffeeMugTexture.loadFromFile("coffee-pickup.png");
-	coffeeMug.setTexture(coffeeMugTexture);
+//	coffeeMugTexture.loadFromFile("coffee-pickup.png");
+//	coffeeMug.setTexture(coffeeMugTexture);
 	
 	stage_music.setVolume(10);
 	// stage_music.play();
 	
 	int min_y = 230;
 	int max_y = 341;
-	
-	enemy_texture.loadFromFile("calc.png");
-	
+		
 	scoreFont.loadFromFile("FreePixel.ttf");
-	
 	scoreText.setFont(scoreFont);
 	scoreText.setString("score: ");
 	scoreText.setCharacterSize(40);
@@ -61,97 +65,144 @@ void Match::Draw (RenderWindow & window) {
 	window.clear(Color(125,60,0,100));		///maximo 255
 	window.draw(background);
 	//window.draw(Zeds_face);
-	window.draw(Pickup);
-	//window.draw(score_text);
+	
+	///en vez d pickup pongo vida1
+	//window.draw(Pickup);
+//	window.draw(vida1);
+	
 	window.draw(Shadow);
 	player.Draw(window); 
 /*	shadow.Draw(window); */
+	
+	m_powerup.Draw(window);
 	
 	scorePrint.setString(scoreToStr);
 	window.draw(scoreText);
 	window.draw(scorePrint);
 	
-	for(int i = 0; i<enemies.size(); i++) {
-		enemies[i].Draw(window);
+	for(int i = 0; i<enemigos.size(); i++) {
+		enemigos[i].Draw(window);
 	}
 	
 	window.display();
 }
 
-bool estaafuera(Enemy enemigo){
-	if(enemigo.posicion().x==-10){
-		return true;
+bool estaafuera(Enemy &enemigo){
+	return enemigo.posicion().x==-10;
+}
+string elegirText(){
+	string elegida;
+	int opcion = rand()% 3 + 1;
+	switch (opcion){
+	case 1:
+		elegida = "calc.png";
+		break;
+	case 2:
+		elegida = "calendar.png";
+		break;
+	case 3:
+		elegida = "folder.png";
+		break;		
+	};
+	return elegida;
+}
+void asignarPos(Enemy &e){
+	
+	int result = rand() % 2;  // varia la posicion donde se generan enemies
+	if(result == 1){
+		e.CambiarPosicion(341,0);
 	}else{
-		return false;
+		e.CambiarPosicion(230,0);
 	}
 }
-
 void Match::Update ( Game &gamee ) {
-	if(Keyboard::isKeyPressed(Keyboard::Key::Escape)){
+	if(Keyboard::isKeyPressed(Keyboard::Key::Escape)){ // para volver a Menu
 		gamee.SetScene(new Menu());
 		stage_music.stop();
 	}
+	
+	// updates
 	player.Update();
-	for(Enemy &e : enemies) {
+	m_powerup.Update();
+	for(Enemy &e : enemigos) {
 		e.Update();
+		if( player.colisionaCon(e) ){
+			gamee.SetScene(new GameOver(puntaje));
+		}else{
+			cant_enemigos_pasados += 1;
+		}
 	}
 	
-	Time time = tiempoenemigos.getElapsedTime();
-	float secsPassed  = time.asSeconds();
+	Time time_enemigos = tiempoenemigos.getElapsedTime(); // de clock  a time
+	float secsPassed  = time_enemigos.asSeconds();
 	
-	if(secsPassed >= distan) {
-		Enemy aux(enemy_texture,speed);
+	if(secsPassed >= distan) { // condicional para q los obstaculos se generen a cierta distancia
 		
-		int result = rand() % 2; 
-		if(result == 1){
-			aux.CambiarPosicion(341,0);
-		}else{
-			aux.CambiarPosicion(230,0);
-		}
-		enemies.push_back(aux);
-		speed=speed-0.2;
+		// para variar la textura de enemigo
+		string file_elegido = elegirText();
+		enemy_texture = new sf::Texture;
+		enemy_texture->loadFromFile(file_elegido);
+		Enemy aux_e(enemy_texture,speed);
+		
+		asignarPos(aux_e);
+		enemigos.push_back(aux_e);
+		
+		speed = speed-0.2; // la velocidad aumenta gradualmente.
+		
 		int valordistan = rand()%3;
-		if(valordistan == 1){
-			distan=distan-0.02;
-		}else{
+		if(valordistan == 1){ 
+			distan=distan-0.02; // se genera mas cerca
+		} else {
 			if(valordistan == 2){
-				distan=distan+0.10;
-			}else{
-				distan=distan-0.15;
+				distan = distan + 0.10; // se genera mas lejos
+			} else {
+				distan = distan-0.15; // se genera mucho mas cerca
 			}
 		}
 		tiempoenemigos.restart();
-		
 	}
-	
-	
-	auto it = remove_if(enemies.begin(),enemies.end(),estaafuera);
-	int cant = enemies.end()-it;
-	enemies.erase(it,enemies.end());
-	
-	
-	//se suman puntos cuando los enemigos vayan siendo eliminados de la pantalla
-		puntaje += 1;
-		scoreToStr = to_string(puntaje);
-	
-	for(int i=0;i<enemies.size();i++){ // colisión jugador-obstáculo
-		auto bb1 = enemies[i].GetBB(); 
-		auto bb2 = player.GetBB();
 		
-	/// modificaciones del RectangleShape de obstaculo para darle mas precisión a la colisión 
-		bb1.height-=10; // se "achica" la altura 
+	auto it = remove_if(enemigos.begin(),enemigos.end(),estaafuera);
+	int cant = enemigos.end() - it;
+	enemigos.erase(it,enemigos.end());
+	
+	puntaje += 1;
+	scoreToStr = to_string(puntaje);
+	
+	if( cant_enemigos_pasados==10 )
+	{	
+		// genero powerup
+		powerup_texture = new sf::Texture;
+		powerup_texture->loadFromFile("clip.png");
+		m_powerup.Asignar(powerup_texture,speed);
 		
-		bb2.left+=20;  //se "alarga" la coordenada del lado izquierdo
-		bb2.height-=20;// se achica la altura
-		bb2.width-=50; // se achica el ancho 
-		
-		if(bb1.intersects(bb2)){
-			gamee.SetScene(new GameOver(puntaje));
+		int result2 = rand() % 2;  // determina la pos
+		if(result2 == 1){
+			m_powerup.CambiarPosicion(300,0);
+		}else{
+			m_powerup.CambiarPosicion(260,0);
 		}
+		
+		
+		
+		/// POWERUP
+		if( player.colisionaCon(m_powerup) ){
+			
+			int contador = 5;
+			while( contador!=0 ){ // la velocidad se hace mas lenta por cinco segundos
+				
+				for(int i=0;i<enemigos.size();i++){ // colisión player-enemigo
+					enemigos[i].bajarVelocidad(0.5);
+				}
+				contador--;
+			}
+		}
+		if( m_powerup.posicion().x==-10 ){ // si esta afuera de la pantalla (no lo agarró)..
+			// borrarlo de la pantalla
+			m_powerup.CambiarPosicion(725,0);// que vuelva a estar quieto en la parte de atras dea
+		}
+		cant_enemigos_pasados = 0;
 	}
 	
-}
 
-Match::~Match ( ) {
-	stage_music.stop();
 }

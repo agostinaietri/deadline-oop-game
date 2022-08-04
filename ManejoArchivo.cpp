@@ -8,7 +8,7 @@ ManejoArchivo::ManejoArchivo() {
 	
 	//metodo open
 	ifstream cargar("mejores_puntajes.txt");
-	if( !cargar.is_open() ){
+	if( !cargar.is_open() ){ //si no existe un archivo con ese nombre, que lo cree
 		
 		ofstream cargar_arch("mejores_puntajes.txt",ios::trunc);
 		Puntaje auxi; auxi.nombre = "xxx"; auxi.puntos = 0;
@@ -16,7 +16,7 @@ ManejoArchivo::ManejoArchivo() {
 			cargar_arch << auxi.nombre <<" " << auxi.puntos << endl;
 		}	
 		cargar_arch.close();
-		ifstream cargar("mejores_puntajes.txt");
+	//	ifstream cargar("mejores_puntajes.txt");
 	}
 	
 	// leo desde el archivo los nombres y puntos q ya estan.
@@ -28,22 +28,15 @@ ManejoArchivo::ManejoArchivo() {
 }
 //
 
-
-//
 string ManejoArchivo::PedirElemento(int x){
 	string ss = ranking_p[x].nombre + " " + to_string(ranking_p[x].puntos);
 	return ss;
 }
 
-size_t ManejoArchivo::PedirTamanio(){
-	return ranking_p.size();
-}
-
 ///compara los puntajes para cambiar la posicion de los mismos.
 static int comparar(const Puntaje &a, const Puntaje &b){
 	return a.puntos>b.puntos; 
-}
-
+}
 void ManejoArchivo::Ingresar(string new_name, int new_score){ 
 	/// Ingreso el nuevo puntaje y acomodo el ranking.
 	
@@ -57,7 +50,7 @@ void ManejoArchivo::Ingresar(string new_name, int new_score){
 	/*con reverse (rbegin y rend) ordena el vector de forma decreciente, con los puntajes mas altos al principio y los mas 
 	bajos al final usando como criterio los puntos del vector de Puntajes (mediante la funcion comparar)
 	para ver si el nuevo puntaje superó a alguno de los mejores existentes.*/
-	sort(ranking_p.rbegin(),ranking_p.rend(),comparar);
+	sort(ranking_p.begin(),ranking_p.end(),comparar);
 	
 	ranking_p.resize(5);//cambio el tamaño a 5 y descarto al 6to.
 	//ranking_p.resize(min(5,(int)ranking_p.size()));//cambio el tamaño por el minimo nro entre 5 y el tamaño original.
@@ -67,4 +60,3 @@ void ManejoArchivo::Ingresar(string new_name, int new_score){
 		refresh << ranking_p[i].nombre << " " << ranking_p[i].puntos << endl ;
 	}
 }
-	

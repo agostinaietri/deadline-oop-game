@@ -10,7 +10,7 @@ using namespace sf;
 
 class Objeto {
 public:
-	Objeto(std::string fname);
+	//Objeto(std::string fname);
 	void Draw(RenderWindow &ww);
 	FloatRect GetBB()const;
 protected:

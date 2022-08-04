@@ -17,7 +17,6 @@ public:
 	void LoadText();
 	void ProcessEvent(Event &e){}
 private:
-	Music menu_music;
 	Font m_font;
 	Text m_text, m_tex2;
 };
