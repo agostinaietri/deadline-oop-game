@@ -9,11 +9,14 @@ using namespace sf;
 
 class ObjetoSinTex {
 public:
-	ObjetoSinTex(sf::Texture &t);
+	ObjetoSinTex(){}
+	ObjetoSinTex(sf::Texture *t);
 	void Draw(RenderWindow &ww);
 	FloatRect GetBB()const;
+	~ObjetoSinTex(){}
 protected:
 	Sprite m_s;
+	Texture m_texture;
 };
 
 #endif

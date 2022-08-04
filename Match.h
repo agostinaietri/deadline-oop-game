@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <vector>
 #include <SFML/Graphics/Font.hpp>
+#include "Powerup.h"
 using namespace std;
 
 class Match : public Scene{
@@ -20,7 +21,7 @@ public:
 	void Draw(RenderWindow &window);
 	void Update(Game &gamee);
 	void ProcessEvent(Event &e){}
-	~Match();
+	~Match(){stage_music.stop();}
 private:
 	Music stage_music;
 /*	Player shadow = Player("shadow.png");*/
@@ -30,24 +31,32 @@ private:
 	Texture face_texture;		///textura de la cara del gatito HUD
 	Sprite Zeds_face;
 	Texture coffee_texture;			///textura de la taza HUD
-	Sprite Pickup;
+	//Texture coffee_texture1 y coffee_texture2;
+	
+	/// en vez de pickup pongo vida1
+	//Sprite Pickup;
+	Sprite vida1;
+	
 	Texture shadow_texture;			///textura de la sombra Enemigo
 	Sprite Shadow;
-	vector <Enemy> enemies;
-	Texture enemy_texture;
+	vector <Enemy> enemigos;
+	Texture *enemy_texture,*powerup_texture;
 	
 	//las partes del score
 	Font scoreFont;
 	Text scorePrint;
 	Text scoreText;
-	Sprite coffeeMug;
-	Texture coffeeMugTexture;
+//	Sprite coffeeMug;
+//	Texture coffeeMugTexture;
 	int estamuerto = -1;
-	float speed=-5;
-	float distan=1.5;
-	Clock tiempoenemigos;
-	int puntaje=0;
+	float speed = -5;
+	float distan = 1.5; // distancia q haye entre cada obstaculo.
+	Clock tiempoenemigos, tiempopowerup;
+	int puntaje = 0;
 	string scoreToStr;
+	
+	Powerup m_powerup;
+	int cant_enemigos_pasados = 0;
 };
 
 #endif

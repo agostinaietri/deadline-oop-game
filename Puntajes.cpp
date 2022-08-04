@@ -7,12 +7,14 @@ Puntajes::Puntajes(string new_name,int new_score) {
 	/// aca la clase ManejoArchivo se encarga de tener guardados los puntajes mas altos.
 	m_archivo.Ingresar(new_name, new_score); // el ultimo jugador q ingresó su nombre es agregado al vector de puntajes junto con los puntos q hizo.
 	
+	m_tex.setFont(m_font);
+	m_tex.setString("press Escape to return to Menu");
+	m_tex.setFillColor(Color(150,150,150));
+	m_tex.setPosition(240,320);
+	m_tex.setCharacterSize(20);
+	
 	this->SetearPuntajes();
 }
-/*Puntajes::Puntajes(){ // ctor en caso que solo se quieran ver los mejores puntajes
-	this->SetearPuntajes();
-}*/
-//
 
 void Puntajes::SetearPuntajes(){
 	/// Setea los textos de los puntajes: c/jugador dentro del ranking se coloca juntando los atributos de cada Puntaje como un string.
@@ -22,12 +24,11 @@ void Puntajes::SetearPuntajes(){
 		Text player;
 		player.setFont(m_font);
 		player.setString(nom_txt);
-		player.setFillColor({150,150,150});
-		player.setPosition(150,(130+10*i));//va sumando +10 al eje 'y' asi se acomodan uno abajo del otro. 
+		player.setFillColor(Color(150,150,150));
+		player.setPosition(150,(90+40*i));//va sumando +40 al eje 'y' asi se acomodan uno abajo del otro. 
 		player.setCharacterSize(40);
 		textos_players.push_back(player); 
 	}	
-	
 }
 //
 void Puntajes::Draw (RenderWindow & Window) {
@@ -37,6 +38,9 @@ void Puntajes::Draw (RenderWindow & Window) {
 	for(int i=0;i<5;i++) { 
 		Window.draw(textos_players[i]);
 	}
+	Window.draw(m_tex);
+	
+	Window.display();
 }
 
 void Puntajes::Update (Game & gamee) {

@@ -1,10 +1,8 @@
 #include "ObjetoSinTex.h"
 
-ObjetoSinTex::ObjetoSinTex(sf::Texture &t) {
-	m_s.setTexture(t);
+ObjetoSinTex::ObjetoSinTex(sf::Texture *t) {
+	m_s.setTexture(*t);
 }
-
-
 void ObjetoSinTex::Draw (RenderWindow &ww) {
 	ww.draw(m_s);
 }
@@ -12,4 +10,3 @@ void ObjetoSinTex::Draw (RenderWindow &ww) {
 FloatRect ObjetoSinTex::GetBB ( ) const {
 	return m_s.getGlobalBounds();
 }
-

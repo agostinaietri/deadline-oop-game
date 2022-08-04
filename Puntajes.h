@@ -12,7 +12,6 @@ using namespace std;
 class Puntajes : public Scene {
 public:
 	Puntajes(string new_name,int new_score);
-	Puntajes();
 	void Draw (RenderWindow & Window);
 	void Update (Game & gamee);
 	void SetearPuntajes();
@@ -21,7 +20,7 @@ private:
 	Font m_font;
 	vector<Text>textos_players;
 	ManejoArchivo m_archivo;
+	Text m_tex, m_title;
 };
 
 #endif
-
